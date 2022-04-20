@@ -114,7 +114,7 @@ export default {
     },
 
     generateSudoku(){
-      var worker = new Worker('../src/generate.js', {type:'module'});
+      var worker = new Worker( new URL('../generate.js', import.meta.url), {type:'module'});
       worker.onmessage = ( e ) => {
         this.game[this.index].board = e.data.tiles
         this.syncBoard(this.game, this.index)

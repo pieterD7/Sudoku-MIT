@@ -164,8 +164,8 @@ export default{
         <img 
           tour-id='1'
           :src='backIconUrl' 
-          v-on:click.stop='back()
-          '/>
+          v-on:click.stop='back()'
+        />
       </div>
       <div>
         <img 

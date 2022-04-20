@@ -242,7 +242,7 @@ export default {
 
     playSound( file ){
       var sound = new Howl({
-        src: ['public/snds/' + file ]
+        src: ['snds/' + file ]
       });
       if( this.settings.audio )
         sound.play()

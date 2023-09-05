@@ -115,9 +115,9 @@ export default{
                 <div class="view">
                     <div tour-id='13' class="one rating">
                         <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(1)">
-                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(2)">
+<!--                         <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(2)">
                         <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(3)">
-                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(4)">
+                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(4)"> -->
                     </div>
                     <div class="type">
                     </div>

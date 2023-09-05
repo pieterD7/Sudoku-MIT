@@ -1,7 +1,7 @@
 class sudoku{
 
     constructor( tiles, autoNotes = true ){
-
+        
         this.tiles = tiles
 
         this.difficulty = 0
@@ -17,7 +17,6 @@ class sudoku{
         this.tiles.forEach( ( tile ) => {
             if( tile.row == row && tile.column == col){
                 t = tile
-                return
             }
         })
         return t
@@ -86,7 +85,7 @@ class sudoku{
 
     calcDifficulty( found1, found2 ){
         return Math.round( 
-            ( found1 + 40 * found2 ) 
+            ( found1 + 500 * found2 ) 
             / ( found1 + found2 ))
     }
 
@@ -220,8 +219,45 @@ class sudoku{
 
         for( let i = 1; i < 10; i++ ){
 
+            let q = this.notesCell( notes.concat(), i - 1),
+                rq = this.characteristics( q );
+
+                q = this.addIndexToNotes(q, 2, i - 1)
+
+                if(this.found(q).length < 9)
+                rq.forEach( (q) => {
+                    if(q.col)
+                        this.removeFromCell(notes, null, q.col, i, [q.index])
+                    if(q.row)
+                        this.removeFromCell(notes, q.row, null, i, [q.index])
+                })
+
+                q = this.notesRow( notes.concat(), i ),
+                rq = this.characteristics( q );
+
+                //continue
+
+                q = this.addIndexToNotes(q, 0, i)
+
+                if(this.found(q).length < 9)
+                    rq.forEach( (q) => {
+                        if(q.cell)
+                            this.removeFromCell(notes, q.row, null, -1 * q.cell, [q.index])
+                    })
+
+                q = this.notesCol( notes, i ),
+                rq = this.characteristics( q );
+
+                q = this.addIndexToNotes(q, 1, i)
+
+                if(this.found(q).length < 9)
+                    rq.forEach( (q) => {
+                        if(q.cell)
+                            this.removeFromCell(notes, null, q.col, -1 * q.cell, [q.index])
+                    })
+            
             // By row
-            let r = this.notesRow( notes, i ),
+/*             let r = this.notesRow( notes, i ),
                 rx = this.notTaken( this.getRow( i ) )
 
             if( r.length > 0 && rx.length > 0 && r.length < 4 && rx.length < 4 ){
@@ -229,6 +265,7 @@ class sudoku{
                     this.notesCell( notes, r[0].cell ),
                     i,
                     null, 
+                    null,
                     rx 
                 )
             }
@@ -242,12 +279,15 @@ class sudoku{
                     this.notesCell( notes, c[0].cell ),
                     null,
                     i, 
+                    null,
                     cx 
                 )
-            }
+            } */
         }
 
-        // If two numbers of the same cell must be in one row or column 
+        //return notes;
+
+/*         // If two numbers of the same cell must be in one row or column 
         // remove those from the same row / column in other cells
         for( let i = 1; i < 10; i++ ){
             let fnd = [],
@@ -306,7 +346,7 @@ class sudoku{
                 }
             } 
         }
-
+ */
         // If one digit has one possibility this must be the answer
         for( let i = 1; i < 10; i++ ){
             for( let m = 0; m < 9; m++){
@@ -323,7 +363,7 @@ class sudoku{
         // If there is such a match for one possibility and not
         // for the other the other possibility must be the answer
         // if both notes are not the same
-        for( let i = 1; i < 10; i++ ){
+/*         for( let i = 1; i < 10; i++ ){
             for( let m = 0; m < 9; m++ ){
                 let n = this.notesCell( notes, i ),
                     fnd = this.findDigitInNotes( n, m ),
@@ -358,7 +398,7 @@ class sudoku{
                     }
                 }
             }
-        }
+        } */
 
         return notes;
     }
@@ -391,12 +431,11 @@ class sudoku{
 
         i = 0;
         let x = 0
-        for( d = digits.concat(); d.length > 0 && x < 200; ){
-            t = Math.round( Math.random() * 8 )
+        for( d = digits.concat(); d.length > 0 && typeof cell[i] !== 'undefined'  && x < 200; ){
+            t = Math.round( Math.random() * (d.length - 1) )
             x++
 
             if( typeof d[t] !== 'undefined' 
-                && typeof cell[i] !== 'undefined' 
                 && this.isPossible( cell[i], d[t], this.makeNotes() )){
                 let tile = cell[i++]
                 tile.index = d[t]
@@ -414,8 +453,8 @@ class sudoku{
             s = ''
 
         while( true ){
-            row = Math.round( Math.random() * 8 + 1),
-            col = Math.round( Math.random() * 8 + 1),
+            row = Math.round( Math.random() * 8) + 1,
+            col = Math.round( Math.random() * 8) + 1,
             tile = this.getTile( row, col ),
             s = ''
 
@@ -436,7 +475,7 @@ class sudoku{
             removed.push(this.removeIndex())
         }
         this.makeNotes()
-        if( this.difficulty > level + 0.5 || this.difficulty < level){
+        if( this.difficulty == -1){
             removed.forEach( ( r ) => {
                 let tile = this.getTile( r.row, r.col )
                 tile.index = r.index
@@ -495,6 +534,21 @@ class sudoku{
             return true
         else
             return false
+    }
+
+    addIndexToNotes( notes, dir, i ){
+        let adds =  []
+        this.tiles.forEach( (t) => {
+            if(typeof t.index == 'number'){
+                if((dir == 0 && i == t.row) || 
+                    (dir == 1 && i == t.column) || 
+                    (dir == 2 && i == t.cell)){
+                        t.notes = [t.index]
+                        adds.push(t)
+                    }
+            }
+        })
+        return notes.concat(adds)
     }
 
     notesCell( notes, cell ){
@@ -651,6 +705,32 @@ class sudoku{
         return cmp.length === 0
     }
 
+    characteristics( set ){
+        let n = [0,1,2,3,4,5,6,7,8],
+            ret = []
+
+        n.forEach( (n) => {
+            let r = [], c = [], q = [] 
+            set.forEach((s) => {
+                s.notes.forEach( (note) => {
+                    if(r.indexOf(s.row ) == -1 && note == n)
+                        r.push(s.row )
+                    if(c.indexOf(s.column ) == -1 && note == n)
+                        c.push(s.column)
+                    if(q.indexOf(s.cell) == -1 && note == n)
+                        q.push(s.cell + 1)
+                })
+            })
+            if(r.length == 1)
+                ret.push({index: n, row: r[0]})
+            if(c.length == 1)
+                ret.push({index: n, col: c[0]})
+            if(q.length == 1)
+                ret.push({index: n, cell: q[0]})
+        })
+        return ret
+    }
+
     notTaken( set ){
         let n = [0,1,2,3,4,5,6,7,8]
         set.forEach( ( s ) => {
@@ -660,15 +740,35 @@ class sudoku{
         return n
     }
 
-    removeFromCell( tiles, row, col, possibilities ){
+    removeFromCell( tiles, row, col, cell, possibilities ){
         tiles.forEach( ( tile ) => {
             if( typeof row == 'number' ){
-                if( tile.row != row  ){
+                if(typeof cell == 'number'){
+                    if(cell > 0){
+                        if(tile.cell != cell - 1 && tile.row == row)
+                            this.removeFromArray(tile.notes, possibilities)
+                    }
+                    else{
+                        if(tile.cell == (-1 * cell) - 1 && tile.row != row)
+                            this.removeFromArray(tile.notes, possibilities)
+                    }
+                }
+                else if( tile.row != row  ){
                     this.removeFromArray( tile.notes, possibilities )
                 }
             }
             else if( typeof col == 'number' ){
-                if( tile.column != col ){
+                if(typeof cell == 'number'){
+                    if(cell > 0){
+                        if(tile.cell != cell - 1 && tile.column == col)
+                            this.removeFromArray(tile.notes, possibilities)
+                    }
+                    else{
+                        if(tile.cell == (-1 * cell) - 1 && tile.column != col)
+                            this.removeFromArray(tile.notes, possibilities)
+                    }
+                }
+                else if( tile.column != col){
                     this.removeFromArray( tile.notes, possibilities )
                 }
             }

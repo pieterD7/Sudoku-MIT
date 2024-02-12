@@ -85,7 +85,7 @@ class sudoku{
 
     calcDifficulty( found1, found2 ){
         return Math.round( 
-            ( found1 + 500 * found2 ) 
+            ( found1 + 100 * found2 ) 
             / ( found1 + found2 ))
     }
 
@@ -217,6 +217,9 @@ class sudoku{
         // considering the row or column, remove them from the possibilities
         // of the other cell tiles
 
+        if(this.pass > 0) return notes
+
+
         for( let i = 1; i < 10; i++ ){
 
             let q = this.notesCell( notes.concat(), i - 1),
@@ -224,129 +227,49 @@ class sudoku{
 
                 q = this.addIndexToNotes(q, 2, i - 1)
 
-                if(this.found(q).length < 9)
+            if(this.found(q).length < 9)
                 rq.forEach( (q) => {
                     if(q.col)
-                        this.removeFromCell(notes, null, q.col, i, [q.index])
+                        ;//this.removeFromCell(notes, null, q.col, i, [q.index])
                     if(q.row)
-                        this.removeFromCell(notes, q.row, null, i, [q.index])
+                        ;//this.removeFromCell(notes, q.row, null, i, [q.index])
                 })
 
-                q = this.notesRow( notes.concat(), i ),
-                rq = this.characteristics( q );
+            q = this.notesRow( notes.concat(), i ),
+            rq = this.characteristics( q );
 
-                //continue
+            q = this.addIndexToNotes(q, 0, i)
 
-                q = this.addIndexToNotes(q, 0, i)
+            if(this.found(q).length < 9)
+                rq.forEach( (q) => {
+                    if(q.cell)
+                        ;//this.removeFromCell(notes, q.row, null, -1 * q.cell, [q.index])
+                })
 
-                if(this.found(q).length < 9)
-                    rq.forEach( (q) => {
-                        if(q.cell)
-                            this.removeFromCell(notes, q.row, null, -1 * q.cell, [q.index])
-                    })
+            q = this.notesCol( notes.concat(), i ),
+            rq = this.characteristics( q );
 
-                q = this.notesCol( notes, i ),
-                rq = this.characteristics( q );
+            q = this.addIndexToNotes(q, 1, i)
 
-                q = this.addIndexToNotes(q, 1, i)
+            if(this.found(q).length < 9)
+                rq.forEach( (q) => {
+                    if(q.cell)
+                        ;//this.removeFromCell(notes, null, q.col, -1 * q.cell, [q.index])
+                })
 
-                if(this.found(q).length < 9)
-                    rq.forEach( (q) => {
-                        if(q.cell)
-                            this.removeFromCell(notes, null, q.col, -1 * q.cell, [q.index])
-                    })
-            
-            // By row
-/*             let r = this.notesRow( notes, i ),
-                rx = this.notTaken( this.getRow( i ) )
+            q = this.notesCell( notes.concat(), i - 1)
+            rq = []
+            rq = this.threeTwoTwo(q)
+            if(rq.length > 0)
+                //console.log(rq)
+                //this.pass = 1
 
-            if( r.length > 0 && rx.length > 0 && r.length < 4 && rx.length < 4 ){
-                this.removeFromCell( 
-                    this.notesCell( notes, r[0].cell ),
-                    i,
-                    null, 
-                    null,
-                    rx 
-                )
-            }
-
-            // By column
-            let c = this.notesCol( notes, i ),
-                cx = this.notTaken( this.getColumn( i ) )
-
-            if( c.length > 0 && cx.length > 0 && c.length < 4 && cx.length < 4 ){
-                this.removeFromCell( 
-                    this.notesCell( notes, c[0].cell ),
-                    null,
-                    i, 
-                    null,
-                    cx 
-                )
-            } */
+            if(this.found(q).length < 9)
+                rq.forEach( (q) => {
+                    this.removeFromCell(notes, q.row, q.column, q.cell, q.notes)
+                })
         }
 
-        //return notes;
-
-/*         // If two numbers of the same cell must be in one row or column 
-        // remove those from the same row / column in other cells
-        for( let i = 1; i < 10; i++ ){
-            let fnd = [],
-                n = this.notesCell( notes, i )
-
-            n.forEach( ( tile ) => {
-                if( tile.notes.length == 2 ){
-                    fnd.push( tile  )
-                }
-            })
-
-            fnd = this.findIndentical( fnd )
-            
-            if( fnd.length == 2){
-                if( fnd[0].row == fnd[1].row ){
-                    let n = this.notesRow( notes, fnd[0].row)
-                    n.forEach( ( note ) => {
-                        if( fnd[0].column != note.column && fnd[1].column != note.column )
-                            this.removeFromArray( note.notes, fnd[0].notes )
-                    })
-                }
-                else if( fnd[0].column == fnd[1].column ){
-                    let n = this.notesCol( notes, fnd[0].column)
-                    n.forEach( ( note ) => {
-                        if( fnd[0].row != note.row && fnd[1].row != note.row )
-                            this.removeFromArray( note.notes, fnd[0].notes )
-                    })
-                }
-            }
-        }
-
-        // If one digit must be in one row or column of one cell
-        // remove this digits in this row or column in the other cells
-        for( let i = 1; i < 10; i++ ){
-            let n = this.notesCell( notes, i )
-            for( let m = 0; m < 9; m++ ){
-                let fnd = this.findDigitInNotes( n, m ),
-                    r = this.allOnRow( fnd )
-                    
-                if( r > -1 && fnd.length > 1 ){
-                    let n = this.notesRow( notes, r)
-                    n.forEach( ( note ) => {
-                        if( note.cell != fnd[0].cell )
-                            this.removeFromArray( note.notes, [m] )
-                    })
-                }
-
-                let c = this.allOnColumn( fnd )
-
-                if( c > -1 && fnd.length > 1 ){
-                    let n = this.notesCol( notes, c)
-                    n.forEach( ( note ) => {
-                        if( note.cell != fnd[0].cell )
-                            this.removeFromArray( note.notes, [m] )
-                    })
-                }
-            } 
-        }
- */
         // If one digit has one possibility this must be the answer
         for( let i = 1; i < 10; i++ ){
             for( let m = 0; m < 9; m++){
@@ -357,48 +280,6 @@ class sudoku{
                 }
             }
         }
-
-        // If there are two possibilities for a digit in a cell, 
-        // try to find a match for the remaining notes
-        // If there is such a match for one possibility and not
-        // for the other the other possibility must be the answer
-        // if both notes are not the same
-/*         for( let i = 1; i < 10; i++ ){
-            for( let m = 0; m < 9; m++ ){
-                let n = this.notesCell( notes, i ),
-                    fnd = this.findDigitInNotes( n, m ),
-                    q = []
-
-                if( this.uniqueNotes( fnd )){
-
-                    if( fnd.length == 2 ){
-                        fnd.forEach( ( f ) => {
-    
-                            let nt = f.notes.concat()
-    
-                            nt.splice( nt.indexOf( m ), 1 )
-                            n.forEach( ( tile ) => {
-                                if( this.identical( tile.notes, nt )
-                                    && (tile.row == f.row || tile.column == f.column))
-                                    q.push( f ) 
-                            })
-                        })
-                        if( q.length == 1 ){
-                            
-                            let row = q[0].row,
-                                column = q[0].column
-
-                            fnd.forEach( ( fn ) => {
-                                if( fn.row != row || fn.column != column ){
-                                    if( fn.notes.length > 1 )
-                                        fn.notes = [m]
-                                }
-                            })
-                        }
-                    }
-                }
-            }
-        } */
 
         return notes;
     }
@@ -475,7 +356,7 @@ class sudoku{
             removed.push(this.removeIndex())
         }
         this.makeNotes()
-        if( this.difficulty == -1){
+        if( this.difficulty > level + 0.5 || this.difficulty < level){
             removed.forEach( ( r ) => {
                 let tile = this.getTile( r.row, r.col )
                 tile.index = r.index
@@ -714,6 +595,114 @@ class sudoku{
         return cmp.length === 0
     }
 
+    /*
+        If there are three notes with three digits and two digits can go in two places and the third in three,
+        then the third digit is the answer to the place which is not a possibility for either of the other two
+     */
+    threeTwoTwo( set ){
+        let ret = set.concat();
+
+        let digits = []
+        ret.forEach( ( r ) => {
+            r.notes.forEach( ( d ) => {
+                let fnd = digits.findIndex((dd) => { if(dd.digit == d) return dd})
+                if( fnd > -1 ){
+                    digits[fnd].n++
+                    digits[fnd].rows.push(r.row)
+                    digits[fnd].columns.push(r.column)
+                }
+                else
+                    digits.push(({digit: d, rows: [r.row], columns: [r.column],  n: 1}))
+            })
+        })
+
+        let two = [],
+            three = [];
+
+        digits.forEach( ( d ) => {
+            if(d.n == 2)
+                two.push(d)
+            else if(d.n == 3)
+                three.push(d)
+        })
+
+        let ds = [],
+            cand1 = [];
+        if(two.length > 0) cand1 = cand1.concat(two)
+        if(three.length > 0) cand1 = cand1.concat(three)
+        digits.forEach( ( d ) => {
+            ds.push(d.digit)
+        })
+
+        ret = set.concat();
+
+        ds = []
+        if(cand1.length == 3)
+            cand1.forEach( (c) => {
+                ds.push(c)
+            })
+/*         ret.forEach( ( r, i ) => {
+            let remove = false
+            r.notes.forEach( ( n ) => {
+                if(ds.indexOf(n) == -1)
+                    remove = true
+            })
+            if(remove)
+                ret.splice(i, 1)
+        }) */
+
+        let places = [],
+            test = [].concat(two, three)
+        test.forEach( (t) => {
+            t.rows.forEach( ( q, n ) => {
+                let fnd = places.find((p) => { if(p.row == t.rows[n] && p.column == t.columns[n]) return p })
+                if(! fnd )
+                    places.push({row:t.rows[n], column:t.columns[n]})
+            })
+        })
+
+
+        if( places.length == 3 && two.length == 2 && three.length == 1){
+
+            let fnDigit = null,
+                column = null,
+                row = null;
+
+            three.forEach( ( o1, n ) => {
+                let fnd = null
+                two.forEach( (tw) => {
+                    if( tw.digit == o1.digit )
+                        fnd = true
+                })
+                if(! fnd){
+                    fnDigit = o1.digit
+                    column = o1.columns[n]
+                    row = o1.rows[n]
+                }
+            })
+
+            let ret2 = []
+            three.forEach( (th) => {
+                if(th.digit == fnDigit){
+                    th.rows.forEach( ( r, n) => {
+                        let fnd = set.find( ( q ) => { if( q.row == th.rows[n] && q.column == th.columns[n] ){ return q } })
+                        if(fnd){
+                            let notes = fnd.notes.concat()
+                            if(th.rows[n] == row && th.columns[n] == column)
+                                notes.splice(notes.indexOf(fnDigit), 1)
+                            else
+                                notes = [fnDigit]
+                            ret2.push({notes:notes, row: fnd.row, column: fnd.column, cell: fnd.cell})
+                        }
+                    })
+                }
+            })
+            return ret2
+        }
+
+        return []
+    }
+    
     characteristics( set ){
         let n = [0,1,2,3,4,5,6,7,8],
             ret = []

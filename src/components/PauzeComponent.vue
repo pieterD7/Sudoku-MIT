@@ -3,9 +3,12 @@
 import exitIconUrl from '/img/exit.svg'
 
 export default{
-    props:[
-        'changeScreen'
-    ],
+    props:{
+        'changeScreen': {
+            type: Function,
+            default: () => {}
+        }
+    },
     data(){
         return {
             t1: null,
@@ -33,14 +36,23 @@ export default{
 </script>
 
 <template>
-    <div class='exit' v-on:click.stop='changeScreen("game")'>
-        <img :src='exitIconUrl'/>
+  <div>
+    <div
+      class="exit"
+      @click.stop="changeScreen(&quot;game&quot;)"
+    >
+      <img :src="exitIconUrl">
     </div>
-    <div class='square'>
-        <div class='tile' v-for='n in 9'>
-            {{ square[m][n - 1] }}
-        </div>
+    <div class="square">
+      <div
+        v-for="n in 9"
+        :key="n"
+        class="tile"
+      >
+        {{ square[m][n - 1] }}
+      </div>
     </div>
+  </div>
 </template>
 
 <style scoped>

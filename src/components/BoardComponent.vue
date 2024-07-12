@@ -3,18 +3,41 @@
 import * as Vue from 'vue'
 import sudoku from '../sudoku.js'
 import {Howl} from 'howler';
-import Tile from './Tile.vue'
-import Numbers from './Numbers.vue'
-import StartDialog from './StartDialog.vue'
-import FinishedDialog from './FinishedDialog.vue'
+import TileComponent from './TileComponent.vue'
+import NumbersComponent from './NumbersComponent.vue'
+import StartDialogComponent from './StartDialogComponent.vue'
+import FinishedDialogComponent from './FinishedDialogComponent.vue'
 
 export default {
   
   components: {
-    Tile,
-    Numbers,
-    StartDialog,
-    FinishedDialog,
+    TileComponent,
+    NumbersComponent,
+    StartDialogComponent,
+    FinishedDialogComponent,
+  },
+
+  props: {
+    'theme': { 
+      type: String, 
+      default:''
+    },
+    'mode': {
+      type: Number,
+      default: 0
+    },
+    'toggleModeMakeNotes': {
+      type: Function,
+      default: () => {}
+    },
+    'settings': {
+      type: Object,
+      default: () => {}
+    },
+    'changeScreen': { 
+      type: Function,
+      default: () => {}
+    } 
   },
 
   emits:[
@@ -61,14 +84,6 @@ export default {
 
     }
   },
-
-  props: [
-    'theme',
-    'mode',
-    'toggleModeMakeNotes',
-    'settings',
-    'changeScreen'
-  ],
 
   watch:{
 
@@ -510,41 +525,68 @@ export default {
 </script>
 
 <template>
+  <div>
+    <StartDialogComponent
+      ref="start" 
+      :generate="generateSudoku"
+      :magic-wand="startWithAutoNotes"
+      @set-difficulty="onSetDifficulty"
+      @startTour="onStartTour"
+      @endTour="onEndTour"
+    />
 
-  <StartDialog ref='start' 
-    v-on:set-difficulty='onSetDifficulty'
-    :generate='generateSudoku'
-    :magic-wand='startWithAutoNotes'
-    v-on:startTour='onStartTour'
-    v-on:endTour='onEndTour' />
+    <FinishedDialogComponent ref="finished" />
 
-  <FinishedDialog ref='finished' />
-
-  <div v-on:click='unsetSelectedTile(), onEndTour()' tour-id='board'>
-    <div class='board'>
-      <div class='row' v-for='k in [0,1,2]'>
-        <div class='cell' v-for='l in [0,1,2]'>
-          <div class='cellrow' v-for='m in [0,1,2]'>
-            <div :class='{"make-notes": mode == 2 && canMakeNotes}' v-for='n in [0,1,2]' 
-                v-on:click.stop='select(3 * k + l, m, n)'>
-              <Tile 
-                ref='tile'
-                :set='set' 
-                :mode='mode' 
-                v-on:keyboardInput='keyboardInput'
-                :toggleModeMakeNotes='toggleModeMakeNotes'/>
+    <div
+      tour-id="board"
+      @click="unsetSelectedTile(), onEndTour()"
+    >
+      <div class="board">
+        <div
+          v-for="k in [0,1,2]"
+          :key="k"
+          class="row"
+        >
+          <div
+            v-for="l in [0,1,2]"
+            :key="l"
+            class="cell"
+          >
+            <div
+              v-for="m in [0,1,2]"
+              :key="m"
+              class="cellrow"
+            >
+              <div
+                v-for="n in [0,1,2]"
+                :key="n"
+                :class="{'make-notes': mode == 2 && canMakeNotes}"
+                @click.stop="select(3 * k + l, m, n)"
+              >
+                <TileComponent 
+                  ref="tile"
+                  :set="set" 
+                  :mode="mode" 
+                  :toggle-mode-make-notes="toggleModeMakeNotes"
+                  @keyboardInput="keyboardInput"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div tour-id='8' class='buttons'>
-        <Numbers 
-          :set='set' 
-          :move='move' 
-          :mode='mode' 
-          :changeSet='changeSet'/>
+      <div
+        tour-id="8"
+        class="buttons"
+      >
+        <NumbersComponent 
+          :set="set" 
+          :move="move" 
+          :mode="mode" 
+          :change-set="changeSet"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -749,7 +791,6 @@ input{
   font-size: 12px;
 }
 .notes > span{
-  display:inline-block;
   float:left;
   width: 33.333%;
   color:#000;

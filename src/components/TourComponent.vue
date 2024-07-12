@@ -1,6 +1,5 @@
 <script>
-
-import tour from '../tour.js'
+import tour from '../tour'
 import * as Vue from 'vue'
 
 
@@ -60,6 +59,14 @@ export default{
                 ])
         }
     },
+    mounted(){
+        Vue.nextTick( () => {
+            setTimeout( () => {
+                if( ! this.hadTour() )
+                    this.initTour( 11 )
+            }, 500)
+        })
+    },
     methods: {
         show(){
             this.showTour = true
@@ -90,32 +97,25 @@ export default{
                 this.hide()
             }
         },
-    },
-    mounted(){
-        Vue.nextTick( () => {
-            setTimeout( () => {
-                if( ! this.hadTour() )
-                    this.initTour( 11 )
-            }, 500)
-        })
     }
 }
 
 </script>
 
 <template>
-
-    <div v-show='showTour' class='popup'>
-        <div class='top'>
-            <div class='arrow arrow-up'></div>
-        </div>
-        <div class='txt'></div>
-        <br/>
-        <div class='bottom right'>
-            <div class='arrow arrow-down'></div>
-        </div>
+  <div
+    v-show="showTour"
+    class="popup"
+  >
+    <div class="top">
+      <div class="arrow arrow-up" />
     </div>
-
+    <div class="txt" />
+    <br>
+    <div class="bottom right">
+      <div class="arrow arrow-down" />
+    </div>
+  </div>
 </template>
 
 <style>

@@ -3,9 +3,12 @@ import exitIconUrl from '/img/exit.svg'
 
 export default{
 
-    props:[
-        'magic-wand'
-    ],
+    props:{
+        'magicWand': {
+            type: String,
+            default: ''
+        }
+    },
 
     data(){
         return {
@@ -28,17 +31,25 @@ export default{
 
 
 <template>
-    <div class='dialog' v-if='showDialog'>
-      <form method="dialog">
-        <fieldset>
-            <legend></legend>
-            <div>
-                <img data-ref='cancel' class='exit' :src='exitIconUrl' v-on:click.stop='hide()'/>
-                <h1>Solved!</h1>
-            </div>
-        </fieldset>
-      </form>
-    </div>
+  <div
+    v-if="showDialog"
+    class="dialog"
+  >
+    <form method="dialog">
+      <fieldset>
+        <legend />
+        <div>
+          <img
+            data-ref="cancel"
+            class="exit"
+            :src="exitIconUrl"
+            @click.stop="hide()"
+          >
+          <h1>Solved!</h1>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
 <style>

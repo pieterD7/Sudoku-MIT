@@ -8,11 +8,20 @@ import magicWandUrl from '/img/magic-wand.svg'
 
 export default{
 
-    props:[
-        'setDifficulty',
-        'generate',
-        'magicWand'
-    ],
+    props:{
+        'setDifficulty': {
+            type: Function,
+            default: () => {}
+        },
+        'generate': {
+            type: Function,
+            default: () => {}
+        },
+        'magicWand': {
+            type: Function,
+            default: () => {}
+        }
+    },
 
     emits:[
         'startTour',
@@ -105,43 +114,72 @@ export default{
 </script>
 
 <template>
-    <div class='dialog' v-if='showDialog'>
-      <form method="dialog">
-        <fieldset>
-            <legend></legend>
-            <div>
-                <img v-show='false' class="exit" :src="exitIconUrl" v-on:click.stop='hide()'>
-                <div class="logo">Sudoku / MIT</div>
-                <div class="view">
-                    <div tour-id='13' class="one rating">
-                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(1)">
-                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(2)">
-                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(3)">
-                        <img class="star" :src="starIconUrl" v-on:click="changeDifficulty(4)">
-                    </div>
-                    <div class="type">
-                    </div>
-                    <div class="menu">
-                        <img 
-                            tour-id='12' 
-                            :src="tourIconUrl"
-                            v-on:click.stop='startTour()'>
-                        <img 
-                            tour-id='14' 
-                            :src="newIconUrl" 
-                            v-on:click.once="generateSudoku()"
-                            >
-                        <img 
-                            tour-id='15' 
-                            :src="magicWandUrl" 
-                            v-on:click.stop="startWithAutoNotes()"
-                            >
-                    </div>
-                </div>
+  <div
+    v-if="showDialog"
+    class="dialog"
+  >
+    <form method="dialog">
+      <fieldset>
+        <legend />
+        <div>
+          <img
+            v-show="false"
+            class="exit"
+            :src="exitIconUrl"
+            @click.stop="hide()"
+          >
+          <div class="logo">
+            Sudoku / MIT
+          </div>
+          <div class="view">
+            <div
+              tour-id="13"
+              class="one rating"
+            >
+              <img
+                class="star"
+                :src="starIconUrl"
+                @click="changeDifficulty(1)"
+              >
+              <img
+                class="star"
+                :src="starIconUrl"
+                @click="changeDifficulty(2)"
+              >
+              <img
+                class="star"
+                :src="starIconUrl"
+                @click="changeDifficulty(3)"
+              >
+              <img
+                class="star"
+                :src="starIconUrl"
+                @click="changeDifficulty(4)"
+              >
             </div>
-        </fieldset>
-      </form>
-    </div>
+            <div class="type" />
+            <div class="menu">
+              <img 
+                tour-id="12" 
+                :src="tourIconUrl"
+                @click.stop="startTour()"
+              >
+              <img 
+                tour-id="14" 
+                :src="newIconUrl" 
+                @click.once="generateSudoku()"
+              >
+              <img 
+                tour-id="15" 
+                :src="magicWandUrl" 
+                @click.stop="startWithAutoNotes()"
+              >
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
 <style>

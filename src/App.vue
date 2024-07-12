@@ -1,11 +1,11 @@
 <script setup>
 
-import Screen from './components/Screen.vue'
+import ScreenComponent from './components/ScreenComponent.vue'
 
 </script>
 
 <template>
-  <Screen />
+  <ScreenComponent />
 </template>
 
 <style>

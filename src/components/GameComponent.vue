@@ -1,7 +1,6 @@
 <script>
-import Tour from './Tour.vue'
-import Board from './Board.vue'
-import Settings from './Settings.vue'
+import TourComponent from './TourComponent.vue'
+import BoardComponent from './BoardComponent.vue'
 
 import backIconUrl from '/img/back.svg'
 import forwardIconUrl from '/img/forward.svg'
@@ -17,9 +16,18 @@ import restoreIconUrl from '/img/restore.svg'
 
 export default{
     components: {
-        Tour,
-        Board,
-        Settings
+        TourComponent,
+        BoardComponent
+    },
+    props:{
+        'changeScreen': {
+          type: Function,
+          default: () => {}
+        },
+        'settings': {
+          type: Object,
+          default: new Object()
+        }
     },
     data(){
         return {
@@ -147,109 +155,109 @@ export default{
           this.mode = 1
         },
     },
-    props:[
-        'changeScreen',
-        'settings',
-    ],
 }
 
 </script>
 <template>
-
-<Tour ref='tour'/>
-
-<div>
-    <div class='top-menu'>
-      <div>
-        <img 
-          tour-id='1'
-          :src='backIconUrl' 
-          v-on:click.stop='back()'
-        />
+  <div>
+    <TourComponent ref="tour" />
+    <div>
+      <div class="top-menu">
+        <div>
+          <img 
+            tour-id="1"
+            :src="backIconUrl" 
+            @click.stop="back()"
+          >
+        </div>
+        <div>
+          <img 
+            tour-id="2"
+            :src="forwardIconUrl" 
+            @click="forward()"
+          >
+        </div>
+        <div>
+          <img 
+            tour-id="3"
+            :src="newIconUrl" 
+            @click="start()"
+          >
+        </div>
+        <div>
+          <img
+            tour-id="4" 
+            :src="refreshIconUrl" 
+            @click="refresh()"
+          >
+        </div>
+        <div v-if="false">
+          <img 
+            tour-id="5"
+            :src="playIconUrl" 
+            :class="{grayed: mode > 0}" 
+            @click.stop="play"
+          >
+        </div>
+        <div>
+          <img
+            tour-id="6" 
+            :src="pauzeIconUrl" 
+            :class="{grayed:mode == 0}" 
+            @click.stop="pauze"
+          >
+        </div>
+        <div>
+          <img
+            tour-id="7" 
+            :src="hamurgerIconUrl" 
+            @click.stop="changeScreen(&quot;settings&quot;)"
+          >
+        </div>
       </div>
-      <div>
-        <img 
-          tour-id='2'
-          :src='forwardIconUrl' 
-          v-on:click='forward()'
-          />
+      <div class="score">
+        <div v-if="d > -1">
+          <img
+            v-for="n in d"
+            :key="n"
+            :src="starIconUrl"
+          >
+        </div>
+        <div>{{ time }}</div>
       </div>
-      <div>
-        <img 
-          tour-id='3'
-          :src='newIconUrl' 
-          v-on:click='start()'
-          />
-      </div>
-      <div>
+      <BoardComponent 
+        ref="board" 
+        :mode="mode" 
+        :settings="settings"
+        :toggle-mode-make-notes="toggleModeMakeNotes"
+        :change-screen="changeScreen"
+        @startTour="onStartTour"
+        @endTour="onEndTour"
+        @difficulty="onDifficulty"
+        @solved="onSolved"
+        @restore="onRestore"
+        @start-play="play"
+      />
+      <div class="bottom-menu">
         <img
-          tour-id='4' 
-          :src='refreshIconUrl' 
-          v-on:click='refresh()'
-          />
-      </div>
-      <div v-if='false'>
+          tour-id="9" 
+          :src="pencilIconUrl" 
+          :class="{grayed: mode == 0}" 
+          @click.stop="toggleModeMakeNotes()"
+        >
+        <img
+          tour-id="10" 
+          :src="backupIconUrl" 
+          @click="backup()"
+        >
         <img 
-          tour-id='5'
-          :src='playIconUrl' 
-          :class='{grayed: mode > 0}' 
-          v-on:click.stop='play'
-          />
-      </div>
-      <div>
-        <img
-          tour-id='6' 
-          :src='pauzeIconUrl' 
-          :class='{grayed:mode == 0}' 
-          v-on:click.stop='pauze'
-          />
-      </div>
-      <div>
-        <img
-          tour-id='7' 
-          :src='hamurgerIconUrl' 
-          v-on:click.stop='changeScreen("settings")'
-          />
+          tour-id="11"
+          :src="restoreIconUrl" 
+          @click="restore()"
+        >
       </div>
     </div>
-    <div class='score'>
-      <div>
-        <img v-if='d > -1' v-for='n in d' :src='starIconUrl'/>
-      </div>
-      <div>{{ time }}</div>
-    </div>
-    <Board 
-      ref='board' 
-      :mode='mode' 
-      :settings='settings'
-      :toggleModeMakeNotes='toggleModeMakeNotes'
-      :changeScreen='changeScreen'
-      v-on:startTour='onStartTour'
-      v-on:endTour='onEndTour'
-      v-on:difficulty='onDifficulty'
-      v-on:solved='onSolved'
-      v-on:restore='onRestore'
-      v-on:start-play='play'
-    />
-    <div class='bottom-menu'>
-      <img
-        tour-id='9' 
-        :src='pencilIconUrl' 
-        v-bind:class='{grayed: mode == 0}' 
-        v-on:click.stop='toggleModeMakeNotes()'
-        />
-      <img
-        tour-id='10' 
-        :src='backupIconUrl' 
-        v-on:click='backup()'
-        />
-      <img 
-        tour-id='11'
-        :src='restoreIconUrl' 
-        v-on:click='restore()'
-        />
-    </div>
-</div>
+  </div>
 </template>
 
 <style>

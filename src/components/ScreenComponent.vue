@@ -1,14 +1,14 @@
 <script>
 import * as Vue from 'vue'
-import Game from './Game.vue'
-import Settings from './Settings.vue'
-import Pauze from './Pauze.vue'
+import GameComponent from './GameComponent.vue'
+import SettingsComponent from './SettingsComponent.vue'
+import PauzeComponent from './PauzeComponent.vue'
 
 export default{
     components: {
-        Game,
-        Settings,
-        Pauze,
+        GameComponent,
+        SettingsComponent,
+        PauzeComponent,
     },
     data(){
         return {
@@ -72,20 +72,23 @@ export default{
 
 </script>
 <template>
-    <keep-alive>
-        <Settings v-if="screen == 'settings'" 
-            :changeScreen='changeScreen'
-            :changeTheme='changeTheme'
-            :settings='settings'
-            :toggleAudio='toggleAudio'
-        />
-        <Pauze v-else-if="screen == 'pauze'" 
-            :changeScreen='changeScreen' 
-        />
-        <Game v-else 
-            ref='game'
-            :changeScreen='changeScreen' 
-            :settings='settings'
-        />
-    </keep-alive>
+  <keep-alive>
+    <SettingsComponent
+      v-if="screen == 'settings'" 
+      :change-screen="changeScreen"
+      :change-theme="changeTheme"
+      :settings="settings"
+      :toggle-audio="toggleAudio"
+    />
+    <PauzeComponent
+      v-else-if="screen == 'pauze'" 
+      :change-screen="changeScreen" 
+    />
+    <GameComponent
+      v-else 
+      ref="game"
+      :change-screen="changeScreen" 
+      :settings="settings"
+    />
+  </keep-alive>
 </template>

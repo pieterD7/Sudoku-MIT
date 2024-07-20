@@ -84,9 +84,11 @@ class sudoku{
     }
 
     calcDifficulty( found1, found2 ){
-        return Math.round( 
+        return Math.min( 
+            Math.round( 
             ( found1 + 100 * found2 ) 
-            / ( found1 + found2 ))
+            / ( found1 + found2 )
+        ), 4)
     }
 
     countPossibilities( notes ){
@@ -219,6 +221,127 @@ class sudoku{
 
         if(this.pass > 0) return notes
 
+        for( let i = 0; i < 3; i++ ){
+
+            let nts = notes.concat()
+            
+            let n = this.addIndexToNotes( nts )
+    
+            // get all relevant notes: eg. row < 4 cell = 1 thr. 3
+            let q1 = this.notesCell( n, i * 3 ),
+                rq = [],
+                q = [];
+    
+            rq = this.characteristics2( q1, 0 )
+    
+            if( rq.length > 0){
+                let nrows = [0,1,2,3,4,5,6,7,8]
+                nrows.forEach( ( nr ) => {
+                    var subn = this.notesCell( notes, i * 3  )
+                    subn.forEach( ( t ) => {
+                        if( rq.find( ( rr ) => { return rr.row == t.row }) 
+                            && t.notes.indexOf( nr ) > -1 
+                            && ! rq.find( ( rn ) => { return rn.n == nr }))
+                                t.notes.splice( t.notes.indexOf( nr ), 1 )
+                    })
+                })
+            }
+    
+            let q2 = this.notesCell( n, i * 3 + 1 )
+            
+            rq = this.characteristics2( q2, 0 )
+    
+            if( rq.length > 0){
+                let nrows = [0,1,2,3,4,5,6,7,8]
+                nrows.forEach( ( nr ) => {
+                    var subn = this.notesCell( notes, i * 3 + 1 )
+                    subn.forEach( ( t ) => {
+                        if( rq.find( ( rr ) => { return rr.row == t.row }) 
+                            && t.notes.indexOf( nr ) > -1 
+                            && ! rq.find( ( rn ) => { return rn.n == nr }))
+                                t.notes.splice( t.notes.indexOf( nr ), 1 )
+                    })
+                })
+            }
+    
+            let q3 = this.notesCell( n, i * 3 + 2 )
+    
+            rq = this.characteristics2( q3, 0 )
+    
+            if( rq.length > 0){
+                let nrows = [0,1,2,3,4,5,6,7,8]
+                nrows.forEach( ( nr ) => {
+                    var subn = this.notesCell( notes, i * 3 + 2 )
+                    subn.forEach( ( t ) => {
+                        if( rq.find( ( rr ) => { return rr.row == t.row }) 
+                            && t.notes.indexOf( nr ) > -1 
+                            && ! rq.find( ( rn ) => { return rn.n == nr }))
+                                t.notes.splice( t.notes.indexOf( nr ), 1 )
+                    })
+                })
+            }
+        }
+
+        for( let i = 0; i < 3; i++ ){
+
+            let nts = notes.concat()
+            
+            let n = this.addIndexToNotes( nts )
+    
+            // get all relevant notes: eg. column < 4 cell = 0 3 and 6, 1 4 7, 2 5 8
+            let q1 = this.notesCell( n, i * 3 + Math.floor(i  / 3) * 3 ),
+                rq = [],
+                q = [];
+    
+            rq = this.characteristics2( q1, 1 )
+    
+            if( rq.length > 0){
+                let ncolumns = [0,1,2,3,4,5,6,7,8]
+                ncolumns.forEach( ( nr ) => {
+                    var subn = this.notesCell( notes, i * 3 + Math.floor(i  / 3) * 3  )
+                    subn.forEach( ( t ) => {
+                        if( rq.find( ( rr ) => { return rr.column == t.column }) 
+                            && t.notes.indexOf( nr ) > -1 
+                            && ! rq.find( ( rn ) => { return rn.n == nr }))
+                                t.notes.splice( t.notes.indexOf( nr ), 1 )
+                    })
+                })
+            }
+    
+            let q2 = this.notesCell( n, i * 3 + Math.floor(i  / 3) * 3 + 1)
+            
+            rq = this.characteristics2( q2, 1 )
+    
+            if( rq.length > 0){
+                let ncolumns = [0,1,2,3,4,5,6,7,8]
+                ncolumns.forEach( ( nr ) => {
+                    var subn = this.notesCell( notes, i * 3 + Math.floor(i  / 3) * 3 + 1)
+                    subn.forEach( ( t ) => {
+                        if( rq.find( ( rr ) => { return rr.column == t.column }) 
+                            && t.notes.indexOf( nr ) > -1 
+                            && ! rq.find( ( rn ) => { return rn.n == nr }))
+                                t.notes.splice( t.notes.indexOf( nr ), 1 )
+                    })
+                })
+            }
+    
+            let q3 = this.notesCell( n, i * 3 + Math.floor(i  / 3) * 3 + 2 )
+    
+            rq = this.characteristics2( q3, 1 )
+    
+            if( rq.length > 0){
+                let ncolumns = [0,1,2,3,4,5,6,7,8]
+                ncolumns.forEach( ( nr ) => {
+                    var subn = this.notesCell( notes, i * 3 + Math.floor(i  / 3) * 3 + 2 )
+                    subn.forEach( ( t ) => {
+                        if( rq.find( ( rr ) => { return rr.column == t.column }) 
+                            && t.notes.indexOf( nr ) > -1 
+                            && ! rq.find( ( rn ) => { return rn.n == nr }))
+                                t.notes.splice( t.notes.indexOf( nr ), 1 )
+                    })
+                })
+            }
+        }
 
         for( let i = 1; i < 10; i++ ){
 
@@ -703,6 +826,66 @@ class sudoku{
         return []
     }
     
+    characteristics2( set, direction ){
+        let n = [0,1,2,3,4,5,6,7,8],
+            ret = [],
+            ret2 = [];
+
+        // Find the indexes for which the row is defined
+        if( direction == 0 ){
+            ret = []
+            n.forEach( ( m ) => {
+                let fnd = []
+                set.forEach( ( s ) => {
+                    if( s.notes.indexOf( m ) > -1 && fnd.indexOf( s.row ) == -1 )
+                        fnd.push( s.row )
+                })
+                if( fnd.length == 1 )
+                    ret.push({n:m, row:fnd[0]})
+            })
+
+            // Get full rows (three left?)
+            n.forEach( ( m ) => {
+                let q = 0
+                ret.forEach( ( r ) => {
+                    if( r.row == m )
+                        q++ 
+                })
+                if( q == 3 ){
+                    ret2 = ret2.concat( ret )
+                }
+                    
+            })
+        }
+        else if( direction == 1 ){
+            ret = []
+            n.forEach( ( m ) => {
+                let fnd = []
+                set.forEach( ( s ) => {
+                    if( s.notes.indexOf( m ) > -1 && fnd.indexOf( s.column ) == -1 )
+                        fnd.push( s.column )
+                })
+                if( fnd.length == 1 )
+                    ret.push({n:m, column:fnd[0]})
+            })
+
+            // Get full rows (three left?)
+            n.forEach( ( m ) => {
+                let q = 0
+                ret.forEach( ( r ) => {
+                    if( r.column == m )
+                        q++ 
+                })
+                if( q == 3 ){
+                    ret2 = ret2.concat( ret )
+                }
+                    
+            })
+        }
+
+        return ret2
+    }
+
     characteristics( set ){
         let n = [0,1,2,3,4,5,6,7,8],
             ret = []

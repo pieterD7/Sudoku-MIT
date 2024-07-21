@@ -407,10 +407,10 @@ class sudoku{
         return notes;
     }
 
-    isValid( ar ){
+    isValid( ){
         let r = true
 
-        ar.forEach( ( a ) => {
+        this.notes.forEach( ( a ) => {
             let t = this.getTile( a.row, a.column)
             if( a.notes.length == 0 
                 && typeof t.index !== 'number')
@@ -449,6 +449,21 @@ class sudoku{
         return x < 200
     }
 
+    setCell2( n ){
+        let cell = this.getCell( n ),
+            valid = false;
+
+        cell.forEach( ( tile ) => {
+            let notes = this.makeNotes(),
+                p = this.getNote( notes, tile.row, tile.column ),
+                valid = p.notes.length > 0,
+                chooseFrom = p.notes,
+                n = Math.round( Math.random( ) * ( chooseFrom.length - 1) )
+            tile.index = n
+        })
+        return valid;
+    }
+
     removeIndex(  ){
 
         let row = -1,
@@ -478,7 +493,7 @@ class sudoku{
         for( let n = 0; n < nRemove; n++ ){
             removed.push(this.removeIndex())
         }
-        this.makeNotes()
+        this.notes = this.makeNotes()
         if( this.difficulty > level + 0.5 || this.difficulty < level){
             removed.forEach( ( r ) => {
                 let tile = this.getTile( r.row, r.col )
@@ -486,6 +501,8 @@ class sudoku{
                 ok = false
             })
         }
+        if( ! this.isValid())
+            return false
         return ok
     }
 
@@ -496,28 +513,49 @@ class sudoku{
             this.unsetCell(m)
 
         // Generate a full Sudoku
-        let q = 0,
-            qq = 0;
+        let hn = [],
+            nn = [9,8,7,6,5,4,3,2,1],
+            c = 9,
+            n = null
 
-        for( let n = 0; n < 9; n++ ){
-            q = 0
-            while( ! this.setCell( n ) && q++ < 200)
-                this.unsetCell( n );
+        while( nn.length > 0 ){
+            c = nn.shift()
+            n = this.makeNotes()
+            
+            //for( var c = nn.shift(); nn.length > 0; null){
+                let fnd = false
+                for( var cc = 0; cc < n.length; cc++){
+                    if( n[cc].notes.length == c ){
+                        fnd = true
+                        hn.push( n[cc] )
+                    }
+                }
+                //if( fnd )
+                    //break;
+            //}
+    
+            if(hn.length > 0){
+                let choice = Math.round( Math.random() * (hn.length - 1))
+                this.tiles.forEach( ( tile ) => {
+                    if( hn[choice].row == tile.row && hn[choice].column == tile.column)
+                        tile.index = hn[choice].notes[Math.round( Math.random() * (hn[choice].notes.length - 1))]
+                }) 
+            }
         }
+        //else 
+            //this.generate()
+
+        //if( ! valid ){
+            //this.generate()
+        //}
 
         // Remove a number of givens for the required difficulty
         let rTiles = [28, 26, 24, 22],
             remove = 81 - rTiles[level-1]
             
-        while( qq++ < 200 &&  ! this.makeHints( remove, level ))
-        ;
-
-        if( qq > 198 )
-            this.generate( level ) 
-
         this.tiles.forEach( ( tile ) => {
             if( typeof tile.index == 'number' )
-                tile.initialValue = true
+                ;//tile.initialValue = true
         })
 
         return this.tiles
@@ -980,7 +1018,7 @@ class sudoku{
     }
 
     getDifficulty(){
-        if( this.isValid( this.notes ))
+        if( this.isValid( ))
             return this.difficulty
         else
             return -1

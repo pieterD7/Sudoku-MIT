@@ -355,6 +355,10 @@ export default {
       this.selectedTile = null
     },
 
+    unset(){
+      this.move( '' )
+    },
+
     /* Player actions */
     keyboardInput( value ){
       if( this.set.indexOf( value ) > -1 ){
@@ -585,6 +589,7 @@ export default {
           :move="move" 
           :mode="mode" 
           :change-set="changeSet"
+          :unset="unset"
         />
       </div>
     </div>
@@ -738,8 +743,8 @@ input{
 }
 .buttons > div > div{
   float:left;
-  width:calc(100% / 9);
-  max-width: calc(100% / 9);
+  width:calc(100% / 10);
+  max-width: calc(100% / 10);
 }
 .board{
   margin: 0.5rem auto;

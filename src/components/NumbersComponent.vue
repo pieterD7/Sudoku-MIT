@@ -12,6 +12,10 @@ export default{
           type: Array,
           default: new Array()
         },
+        'unset':{
+          type: Function,
+          default: () => {}
+        },
         'changeSet': {
           type: Function,
           default: () => {}
@@ -98,5 +102,8 @@ export default{
       :set="set"
       :change-set="changeSet"
     />
+    <button @click.stop="unset()">
+      x
+    </button>
   </div>
 </template>

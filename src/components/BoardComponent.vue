@@ -362,7 +362,7 @@ export default {
           return 
         this.move( value )
       }
-      else if( value == 'DELETE'){
+      else if( value == 'ENTER'){
         this.move( '' )
       }
     },

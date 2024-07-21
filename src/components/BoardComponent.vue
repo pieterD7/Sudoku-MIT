@@ -322,13 +322,10 @@ export default {
 
     /* Functions to update the notes after player move */
     removeFromNotes( selectedTile, value, tiles ){
-      tiles.forEach( ( tile ) => {
-        if( tile.row != selectedTile.row 
-          && tile.column != selectedTile.column 
-          && tile.notes.length > 0 || true){
+      if( value > -1)
+        tiles.forEach( ( tile ) => {
             tile.notes.splice( tile.notes.indexOf( value ), 1 )
-          }
-      })
+        })
     },
 
     updateNotes( selectedTile, value ){
@@ -360,15 +357,18 @@ export default {
 
     /* Player actions */
     keyboardInput( value ){
-      if( this.set.indexOf( value ) > -1 )
+      if( this.set.indexOf( value ) > -1 ){
+        if(! this.beforeMove(this.selectedTile, this.set.indexOf(value)))
+          return 
         this.move( value )
+      }
+      else if( value == 'DELETE'){
+        this.move( '' )
+      }
     },
 
     move( value ){
       if(this.selectedTile){
-
-        if(! this.beforeMove(this.selectedTile, this.set.indexOf(value)))
-          return 
 
         if( this.game.length > this.index + 1 )
           this.game.splice(this.index + 1)
@@ -382,7 +382,7 @@ export default {
 
         game.push({board: board, notes: notes, cellsFull: cellsFull, rowsFull: rowsFull, columnsFull: columnsFull})
         let index = this.index + 1
-        
+
         if( this.mode == 2 ){
           let found = []
           notes.forEach( ( note ) => {
@@ -408,7 +408,7 @@ export default {
             row:this.selectedTile.row,
             column:this.selectedTile.column,
             cell:this.selectedTile.cell,
-            index: this.set.indexOf(value),
+            index: this.set.indexOf(value) > -1 ? this.set.indexOf(value) : '',
             initialValue:this.mode == 0? true : false
           })
           this.updateNotes( this.selectedTile, this.set.indexOf(value) )

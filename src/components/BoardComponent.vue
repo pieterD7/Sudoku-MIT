@@ -978,5 +978,8 @@ input{
     min-height: calc(100vw / 9);
     max-height: calc(100vw / 9);
   }
+  .number.notes{
+    font-size: 11px;
+  }
 }
 </style>

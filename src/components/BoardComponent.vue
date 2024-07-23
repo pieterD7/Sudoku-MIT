@@ -132,12 +132,12 @@ export default {
       var worker = new Worker( new URL('../generate.js', import.meta.url), {type:'module'});
       worker.onmessage = ( e ) => {
         this.game[this.index].board = e.data.tiles
-        this.game[this.index].notes = e.data.notes
+        //this.game[this.index].notes = e.data.notes
         this.syncBoard(this.game, this.index)
         this.$emit("difficulty", e.data.d)
         this.$emit("startPlay", true)
       }
-      worker.postMessage({tiles:this.getTiles(), d: this.difficulty});
+      worker.postMessage({tiles:JSON.stringify(this.getTiles()), d: this.difficulty});
 
       this.changeScreen( 'pauze' )
     },

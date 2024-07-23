@@ -4,7 +4,7 @@ class sudoku{
         
         this.tiles = tiles
 
-        this.difficulty = 0
+        this.difficulty = -1
 
         this.notes = []
 
@@ -427,14 +427,15 @@ class sudoku{
         })
     }
 
-    removeIndex(  ){
+    removeIndex( ){
 
         let row = -1,
             col = -1,
             tile = null,
-            s = ''
+            s = '',
+            qq = 0
 
-        while( true ){
+        while( qq < 81 * 2){
             row = Math.round( Math.random() * 8) + 1,
             col = Math.round( Math.random() * 8) + 1,
             tile = this.getTile( row, col ),
@@ -443,7 +444,12 @@ class sudoku{
             if( typeof tile.index == 'number'){
                 s = tile.index
                 tile.index = ''
-                break;
+                if( this.makeNotes() && this.difficulty > 0)
+                    break;
+                else{
+                    tile.index = s
+                    qq++
+                }
             }
         }
         return {row:row, col:col, index: s}
@@ -465,8 +471,6 @@ class sudoku{
             this.notes = []
             ok = false
         }
-        //if( ! this.validSudoku())
-        //    return false
         return ok
     }
 
@@ -474,7 +478,7 @@ class sudoku{
         let n = true,
             c = 0
         this.tiles.forEach( ( t ) => {
-            if( t.index )
+            if( typeof t.index == 'number' )
                 c++
             else if( ( ! t.notes || t.notes.length != 1 ))
                 n = false
@@ -485,6 +489,10 @@ class sudoku{
     }
 
     generate( level = 1 ){
+
+        console.log('start generate')
+        console.time('generate')
+
         // Clear the previous run
         for( let m = 0; m < 9; m++ )
             this.unsetCell(m)
@@ -533,6 +541,9 @@ class sudoku{
             if( typeof tile.index == 'number' )
                 tile.initialValue = true
         })
+
+        console.timeEnd('generate')
+
         return this.tiles
     }
 

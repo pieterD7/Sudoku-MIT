@@ -132,6 +132,7 @@ export default {
       var worker = new Worker( new URL('../generate.js', import.meta.url), {type:'module'});
       worker.onmessage = ( e ) => {
         this.game[this.index].board = e.data.tiles
+        this.game[this.index].notes = e.data.notes
         this.syncBoard(this.game, this.index)
         this.$emit("difficulty", e.data.d)
         this.$emit("startPlay", true)
@@ -366,7 +367,7 @@ export default {
           return 
         this.move( value )
       }
-      else if( value == 'ENTER'){
+      else if( value == 'ENTER' ){
         this.move( '' )
       }
     },

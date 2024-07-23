@@ -21,7 +21,7 @@ export default{
 
             settings:{
                 audio: true,
-                theme: 'default'
+                theme: 'black'
             }
         }
     },

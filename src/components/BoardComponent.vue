@@ -698,10 +698,6 @@ input{
 .black .buttons{
   color:#f7f7f7;
 }
-.black .number.initialValue{
-  color: #f7f7f7;
-  font-weight: bold;
-}
 
 .black .number.index0{
   color: #5599FF;
@@ -729,6 +725,10 @@ input{
 }
 .black .number.index8{
  	color: #55FE66;
+}
+.black .number.initialValue{
+  text-decoration: underline;
+  font-weight: bold;
 }
 .buttons{
   margin: 0 auto;

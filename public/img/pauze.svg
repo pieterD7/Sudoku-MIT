@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="pauze.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
    id="svg3724"
    version="1.1"
    viewBox="0 0 13.21227 13.22157"
    height="13.22157mm"
-   width="13.21227mm">
+   width="13.21227mm"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs3718" />
   <sodipodi:namedview
      inkscape:window-maximized="1"
-     inkscape:window-y="-11"
-     inkscape:window-x="-11"
-     inkscape:window-height="2066"
-     inkscape:window-width="3840"
+     inkscape:window-y="-9"
+     inkscape:window-x="-9"
+     inkscape:window-height="991"
+     inkscape:window-width="1920"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="64.943904"
-     inkscape:cx="116.39664"
+     inkscape:cy="64.910714"
+     inkscape:cx="30.267857"
      inkscape:zoom="5.6"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
      bordercolor="#666666"
      pagecolor="#ffffff"
-     id="base" />
+     id="base"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata3721">
     <rdf:RDF>
@@ -60,11 +63,11 @@
        id="rect891-1"
        style="fill:none;stroke:#ffffff;stroke-width:0.63236;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stop-color:#000000" />
     <rect
-       style="fill:none;stroke:#ffffff;stroke-width:0.568699;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stop-color:#000000"
+       style="fill:none;stroke:#ffffff;stroke-width:0.384789;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stop-color:#000000"
        id="rect891-1-3"
-       width="7.0094419"
-       height="7.0285411"
-       x="78.125008"
-       y="67.545471" />
+       width="4.7426825"
+       height="4.7556052"
+       x="79.258385"
+       y="68.681938" />
   </g>
 </svg>

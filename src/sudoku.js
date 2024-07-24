@@ -86,7 +86,7 @@ class sudoku{
     calcDifficulty( found1, found2 ){
         return Math.min( 
             Math.round( 
-            ( found1 + 100 * found2 ) 
+            ( found1 + 50 * found2 ) 
             / ( found1 + found2 )
         ), 4)
     }
@@ -1004,10 +1004,7 @@ class sudoku{
     }
 
     getDifficulty(){
-        if( this.isValid( ))
-            return this.difficulty
-        else
-            return -1
+        return this.difficulty
     }
 
     getNotes(){
